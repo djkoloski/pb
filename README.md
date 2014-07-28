@@ -1,6 +1,8 @@
-# Pb: Lead
+=======
+Pb: Lead
+==
 
-Lead is a toolkit that aims to simplify, standardize, and streamline using C# with Unity.
+Lead is a open-source toolkit that aims to simplify, standardize, and streamline using C# with Unity.
 
 ## Serialization
 
