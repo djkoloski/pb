@@ -40,7 +40,7 @@ namespace Pb
 			/// <returns>The name of the desired standard sorting layer</returns>
 			public static string StandardSortingLayerName(int index)
 			{
-				return ("o2dtk_" + index);
+				return ("pb_" + index);
 			}
 			/// <summary>
 			/// Gets the ID of a standard sorting layer

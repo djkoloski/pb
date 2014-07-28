@@ -170,6 +170,10 @@ namespace Pbtk
 						break;
 					case "Aesthetic":
 						EditorGUILayout.BeginHorizontal();
+						controller.when_draw_gizmos = (TileMapController.GizmosDrawTime)EditorGUILayout.EnumPopup("When to draw", controller.when_draw_gizmos);
+						EditorGUILayout.EndHorizontal();
+
+						EditorGUILayout.BeginHorizontal();
 						controller.draw_tile_boundaries = EditorGUILayout.BeginToggleGroup("Draw tiles", controller.draw_tile_boundaries);
 						controller.gizmo_color_tile = EditorGUILayout.ColorField(controller.gizmo_color_tile);
 						EditorGUILayout.EndToggleGroup();

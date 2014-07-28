@@ -11,6 +11,19 @@ namespace Pbtk
 			Pb.TileMap.TileMapController
 		{
 			/// <summary>
+			/// A simple enum of when to draw tile gizmos
+			/// </summary>
+			public enum GizmosDrawTime
+			{
+				Always,
+				Selected,
+				Never
+			}
+			/// <summary>
+			/// When to draw gizmos
+			/// </summary>
+			public GizmosDrawTime when_draw_gizmos = GizmosDrawTime.Always;
+			/// <summary>
 			/// Whether to draw tile boundaries
 			/// </summary>
 			public bool draw_tile_boundaries = true;
@@ -27,9 +40,25 @@ namespace Pbtk
 			/// </summary>
 			public Color32 gizmo_color_chunk = Color.white;
 			/// <summary>
-			/// Draws gizmos on the screen to show where the tiles of the map are
+			/// Draws gizmos if set to always
 			/// </summary>
 			public void OnDrawGizmos()
+			{
+				if (when_draw_gizmos == GizmosDrawTime.Always)
+					DrawGizmos();
+			}
+			/// <summary>
+			/// Draws gizmos if set to selected
+			/// </summary>
+			public void OnDrawGizmosSelected()
+			{
+				if (when_draw_gizmos == GizmosDrawTime.Selected)
+					DrawGizmos();
+			}
+			/// <summary>
+			/// Draws gizmos on the screen to show where the tiles of the map are
+			/// </summary>
+			public void DrawGizmos()
 			{
 				if (base.tile_map == null)
 					return;
