@@ -87,7 +87,7 @@ namespace Pbtk
 			/// <param name="l">The layer index of the tile in the chunk</param>
 			/// <param name="gid">The GID of the tile to render</param>
 			/// <returns>The rendered tile</returns>
-			public GameObject RenderTile(TileMap tile_map, int chunk_index_x, int chunk_index_y, int x, int y, int l, int gid)
+			public virtual GameObject RenderTile(TileMap tile_map, int chunk_index_x, int chunk_index_y, int x, int y, int l, int gid)
 			{
 				int id = gid & 0x1FFFFFFF;
 				bool flip_horiz = ((uint)gid & 0x80000000) == 0x80000000;
