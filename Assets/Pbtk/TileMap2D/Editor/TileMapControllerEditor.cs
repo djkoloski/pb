@@ -276,6 +276,8 @@ namespace Pbtk
 			/// </summary>
 			public void OnSceneGUI()
 			{
+				if (!controller.initialized)
+					controller.Init();
 				if (tile_map == null)
 					return;
 
