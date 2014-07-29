@@ -146,7 +146,10 @@ namespace Pbtk
 					return;
 
 				EditorGUILayout.BeginHorizontal();
-				controller.tile_map = EditorGUILayout.ObjectField("Tile map", controller.tile_map, typeof(TileMap), false) as TileMap;
+				Pb.Utility.Undo.RegisterChange<Pb.TileMap.TileMap>(
+					EditorGUILayout.ObjectField("Tile map", controller.tile_map, typeof(TileMap), false) as Pb.TileMap.TileMap,
+					ref controller.tile_map, controller,
+					"Changed tile map");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
@@ -182,18 +185,33 @@ namespace Pbtk
 						break;
 					case "Aesthetic":
 						EditorGUILayout.BeginHorizontal();
-						controller.when_draw_gizmos = (TileMapController.GizmosDrawTime)EditorGUILayout.EnumPopup("When to draw", controller.when_draw_gizmos);
+						Pb.Utility.Undo.RegisterChange<TileMapController.GizmosDrawTime>(
+							(TileMapController.GizmosDrawTime)EditorGUILayout.EnumPopup("When to draw", controller.when_draw_gizmos),
+							ref controller.when_draw_gizmos, controller,
+							"Changed gizmos draw condition");
 						EditorGUILayout.EndHorizontal();
 
 						EditorGUILayout.BeginHorizontal();
-						controller.draw_tile_boundaries = EditorGUILayout.BeginToggleGroup("Draw tiles", controller.draw_tile_boundaries);
-						controller.gizmo_color_tile = EditorGUILayout.ColorField(controller.gizmo_color_tile);
+						Pb.Utility.Undo.RegisterChange<bool>(
+							EditorGUILayout.BeginToggleGroup("Draw tiles", controller.draw_tile_boundaries),
+							ref controller.draw_tile_boundaries, controller,
+							"Changed whether to draw tile boundaries");
+						Pb.Utility.Undo.RegisterChange<Color32>(
+							EditorGUILayout.ColorField(controller.gizmo_color_tile),
+							ref controller.gizmo_color_tile, controller,
+							"Changed tile boundary draw color");
 						EditorGUILayout.EndToggleGroup();
 						EditorGUILayout.EndHorizontal();
 
 						EditorGUILayout.BeginHorizontal();
-						controller.draw_chunk_boundaries = EditorGUILayout.BeginToggleGroup("Draw chunks", controller.draw_chunk_boundaries);
-						controller.gizmo_color_chunk = EditorGUILayout.ColorField(controller.gizmo_color_chunk);
+						Pb.Utility.Undo.RegisterChange<bool>(
+							EditorGUILayout.BeginToggleGroup("Draw chunks", controller.draw_chunk_boundaries),
+							ref controller.draw_chunk_boundaries, controller,
+							"Changed whether to draw chunk boundaries");
+						Pb.Utility.Undo.RegisterChange<Color32>(
+							EditorGUILayout.ColorField(controller.gizmo_color_chunk),
+							ref controller.gizmo_color_chunk, controller,
+							"Changed chunk boundary draw color");
 						EditorGUILayout.EndToggleGroup();
 						EditorGUILayout.EndHorizontal();
 						break;

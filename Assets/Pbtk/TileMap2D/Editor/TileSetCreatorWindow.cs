@@ -76,54 +76,94 @@ namespace Pbtk
 			public void OnGUI()
 			{
 				EditorGUILayout.BeginHorizontal();
-				source_path = EditorGUILayout.TextField("Source image", source_path);
+				Pb.Utility.Undo.RegisterChange<string>(
+					EditorGUILayout.TextField("Source image", source_path),
+					ref source_path, this,
+					"Changed image source path");
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button("..."))
-					source_path = EditorUtility.OpenFilePanel("Image", source_path, "");
+					Pb.Utility.Undo.RegisterChange<string>(
+						EditorUtility.OpenFilePanel("Image", source_path, ""),
+						ref source_path, this,
+						"Changed image source path");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				tile_sets_dir = EditorGUILayout.TextField("Tile sets directory", tile_sets_dir);
+				Pb.Utility.Undo.RegisterChange<string>(
+					EditorGUILayout.TextField("Tile sets directory", tile_sets_dir),
+					ref tile_sets_dir, this,
+					"Changed tile sets directory");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				pixels_per_unit = EditorGUILayout.FloatField("Pixels per unit", pixels_per_unit);
+				Pb.Utility.Undo.RegisterChange<float>(
+					EditorGUILayout.FloatField("Pixels per unit", pixels_per_unit),
+					ref pixels_per_unit, this,
+					"Changed tile set pixels per unit");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				has_transparent_color = EditorGUILayout.BeginToggleGroup("Transparent color", has_transparent_color);
+				Pb.Utility.Undo.RegisterChange<bool>(
+					EditorGUILayout.BeginToggleGroup("Transparent color", has_transparent_color),
+					ref has_transparent_color, this,
+					"Changed whether the tile set has a transparent color");
 				EditorGUILayout.EndHorizontal();
 				EditorGUILayout.BeginHorizontal();
-				transparent_color = EditorGUILayout.ColorField(transparent_color);
+				Pb.Utility.Undo.RegisterChange<Color32>(
+					EditorGUILayout.ColorField(transparent_color),
+					ref transparent_color, this,
+					"Changed tile set transparent color");
 				EditorGUILayout.EndToggleGroup();
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				slice_size = EditorGUILayout.Vector2Field("Slice size", slice_size);
+				Pb.Utility.Undo.RegisterChange<Vector2>(
+					EditorGUILayout.Vector2Field("Slice size", slice_size),
+					ref slice_size, this,
+					"Changed tile set slice size");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				margin = EditorGUILayout.Vector2Field("Margin", margin);
+				Pb.Utility.Undo.RegisterChange<Vector2>(
+					EditorGUILayout.Vector2Field("Margin", margin),
+					ref margin, this,
+					"Changed tile set margin");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				spacing = EditorGUILayout.Vector2Field("Spacing", spacing);
+				Pb.Utility.Undo.RegisterChange<Vector2>(
+					EditorGUILayout.Vector2Field("Spacing", spacing),
+					ref spacing, this,
+					"Changed tile set spacing");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				draw_offset = EditorGUILayout.Vector2Field("Draw offset", draw_offset);
+				Pb.Utility.Undo.RegisterChange<Vector2>(
+					EditorGUILayout.Vector2Field("Draw offset", draw_offset),
+					ref draw_offset, this,
+					"Changed tile set draw offset");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				flip_x = EditorGUILayout.Toggle("Flip X order", flip_x);
+				Pb.Utility.Undo.RegisterChange<bool>(
+					EditorGUILayout.Toggle("Flip X order", flip_x),
+					ref flip_x, this,
+					"Changed whether to flip tile set X order");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				flip_y = EditorGUILayout.Toggle("Flip Y order", flip_y);
+				Pb.Utility.Undo.RegisterChange<bool>(
+					EditorGUILayout.Toggle("Flip Y order", flip_y),
+					ref flip_y, this,
+					"Changed whether to flip tile set Y order");
+				EditorGUILayout.EndHorizontal();
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				force_rebuild = EditorGUILayout.Toggle("Force rebuild", force_rebuild);
+				Pb.Utility.Undo.RegisterChange<bool>(
+					EditorGUILayout.Toggle("Force rebuild", force_rebuild),
+					ref force_rebuild, this,
+					"Changed whether to force a tile set rebuild");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();

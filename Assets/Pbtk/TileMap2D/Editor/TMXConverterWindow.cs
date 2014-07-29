@@ -26,37 +26,61 @@ namespace Pbtk
 			public void OnGUI()
 			{
 				EditorGUILayout.BeginHorizontal();
-				input_path = EditorGUILayout.TextField("TMX File", input_path);
+				Pb.Utility.Undo.RegisterChange<string>(
+					EditorGUILayout.TextField("TMX File", input_path),
+					ref input_path, this,
+					"Changed TMX input path");
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button("..."))
 				{
-					input_path = EditorUtility.OpenFilePanel("TMX file", input_path, "tmx");
+					Pb.Utility.Undo.RegisterChange<string>(
+						EditorUtility.OpenFilePanel("TMX file", input_path, "tmx"),
+						ref input_path, this,
+						"Changed TMX input path");
 					output_name = Path.GetFileNameWithoutExtension(input_path);
 				}
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				output_name = EditorGUILayout.TextField("Output name", output_name);
+				Pb.Utility.Undo.RegisterChange<string>(
+					EditorGUILayout.TextField("Output name", output_name),
+					ref output_name, this,
+					"Changed tile map output name");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				tile_sets_dir = EditorGUILayout.TextField("Tile sets directory", tile_sets_dir);
+				Pb.Utility.Undo.RegisterChange<string>(
+					EditorGUILayout.TextField("Tile sets directory", tile_sets_dir),
+					ref tile_sets_dir, this,
+					"Changed tile sets directory");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				pixels_per_unit = EditorGUILayout.FloatField("Pixels per unit", pixels_per_unit);
+				Pb.Utility.Undo.RegisterChange<float>(
+					EditorGUILayout.FloatField("Pixels per unit", pixels_per_unit),
+					ref pixels_per_unit, this,
+					"Changed tile set pixels per unit");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				chunk_size_x = EditorGUILayout.IntField("Chunk width", chunk_size_x);
+				Pb.Utility.Undo.RegisterChange<int>(
+					EditorGUILayout.IntField("Chunk width", chunk_size_x),
+					ref chunk_size_x, this,
+					"Changed tile map chunk width");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				chunk_size_y = EditorGUILayout.IntField("Chunk height", chunk_size_y);
+				Pb.Utility.Undo.RegisterChange<int>(
+					EditorGUILayout.IntField("Chunk height", chunk_size_y),
+					ref chunk_size_y, this,
+					"Changed tile map chunk height");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				force_rebuild_tile_sets = EditorGUILayout.Toggle("Force rebuild tile sets", force_rebuild_tile_sets);
+				Pb.Utility.Undo.RegisterChange<bool>(
+					EditorGUILayout.Toggle("Force rebuild tile sets", force_rebuild_tile_sets),
+					ref force_rebuild_tile_sets, this,
+					"Changed whether to force tile set rebuilding");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();

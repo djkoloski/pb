@@ -32,7 +32,10 @@ namespace Pb
 			void OnGUI()
 			{
 				EditorGUILayout.BeginHorizontal();
-				collections = EditorGUILayout.ToggleLeft("Pb.Collections", collections);
+				Pb.Utility.Undo.RegisterChange<bool>(
+					EditorGUILayout.ToggleLeft("Pb.Collections", collections),
+					ref collections, this,
+					"Changed whether to run collections unit test");
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();

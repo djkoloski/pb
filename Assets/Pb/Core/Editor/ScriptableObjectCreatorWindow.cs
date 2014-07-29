@@ -39,16 +39,21 @@ namespace Pb
 			public void OnGUI()
 			{
 				EditorGUILayout.BeginHorizontal();
-				MonoScript new_script = EditorGUILayout.ObjectField("Source file", script, typeof(MonoScript), false) as MonoScript;
-				if (new_script != script)
+				if (Utility.Undo.RegisterChange<MonoScript>(
+					EditorGUILayout.ObjectField("Source file", script, typeof(MonoScript), false) as MonoScript,
+					ref script, this,
+					"Changed source file")
+					)
 				{
-					script = new_script;
 					if (ParseScriptType())
 						asset_name = type.Name;
 				}
 				EditorGUILayout.EndHorizontal();
 				EditorGUILayout.BeginHorizontal();
-				asset_name = EditorGUILayout.TextField("Name", asset_name);
+				Utility.Undo.RegisterChange<string>(
+					EditorGUILayout.TextField("Name", asset_name),
+					ref asset_name, this,
+					"Changed name");
 				EditorGUILayout.EndHorizontal();
 				EditorGUILayout.BeginHorizontal();
 				if (GUILayout.Button("Create ScriptableObject"))

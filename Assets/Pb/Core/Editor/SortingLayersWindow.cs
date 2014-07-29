@@ -59,7 +59,10 @@ namespace Pb
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
-				make_index = EditorGUILayout.IntField(make_index);
+				Pb.Utility.Undo.RegisterChange<int>(
+					EditorGUILayout.IntField(make_index),
+					ref make_index, this,
+					"Changed standard sorting layer index");
 				if (GUILayout.Button("Make sorting layer"))
 					MakeSortingLayer();
 				EditorGUILayout.EndHorizontal();
