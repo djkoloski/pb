@@ -101,6 +101,16 @@ namespace Pbtk
 				}
 			}
 			/// <summary>
+			/// Gets the chunk manager as a dynamic chunk generator (if able)
+			/// </summary>
+			public DynamicChunkGenerator dynamic_chunk_generator
+			{
+				get
+				{
+					return (chunk_manager as DynamicChunkGenerator);
+				}
+			}
+			/// <summary>
 			/// Determines whether the chunk manager is a static chunk manager
 			/// </summary>
 			public bool is_static_chunk_manager
@@ -111,12 +121,14 @@ namespace Pbtk
 				}
 			}
 			/// <summary>
-			/// Pings the chunk under the cursor
+			/// Determines whether the chunk manager is a dynamic chunk generator
 			/// </summary>
-			public void PingChunk()
+			public bool is_dynamic_generator
 			{
-				if (chunk_manager != null)
-					EditorGUIUtility.PingObject(chunk_manager.GetChunk(chunk_x, chunk_y, 0));
+				get
+				{
+					return dynamic_chunk_generator != null;
+				}
 			}
 			/// <summary>
 			/// Sets the controller when it changes
@@ -225,7 +237,7 @@ namespace Pbtk
 				switch (command.name)
 				{
 					case "ping_chunk":
-						PingChunk();
+						EditorGUIUtility.PingObject(chunk_manager.GetChunk((int)command.args[0], (int)command.args[1], 0));
 						break;
 					case "begin_editing":
 						controller.Begin();
@@ -252,8 +264,8 @@ namespace Pbtk
 					case "get_tile_id":
 						Debug.Log(controller.GetTile((int)command.args[0], (int)command.args[1], 0));
 						break;
-					case "change_tile_id":
-						controller.ChangeTile((int)command.args[0], (int)command.args[1], 0, controller.GetTile((int)command.args[0], (int)command.args[1], 0) + 1);
+					case "reset_generator":
+						dynamic_chunk_generator.Reset();
 						break;
 					default:
 						throw new System.ArgumentException("Invalid context command argument '" + command.name + "'");
@@ -301,30 +313,42 @@ namespace Pbtk
 						menu.AddItem(new GUIContent("Begin editing"), false, ExecuteContext, new ContextCommand("begin_editing", null));
 					else
 					{
-						if (chunk_x >= chunk_manager.chunk_left && chunk_x <= chunk_manager.chunk_right && chunk_y >= chunk_manager.chunk_bottom && chunk_y <= chunk_manager.chunk_top)
+						if (chunk_manager == null)
+							menu.AddDisabledItem(new GUIContent("No chunk manager"));
+						else
 						{
-							if (controller.IsChunkLoaded(chunk_x, chunk_y))
+							if (chunk_x >= chunk_manager.chunk_left && chunk_x <= chunk_manager.chunk_right && chunk_y >= chunk_manager.chunk_bottom && chunk_y <= chunk_manager.chunk_top)
 							{
-								menu.AddItem(new GUIContent("Unload chunk"), false, ExecuteContext, new ContextCommand("unload_chunk", new object[2] { chunk_x, chunk_y }));
+								if (controller.IsChunkLoaded(chunk_x, chunk_y))
+								{
+									menu.AddItem(new GUIContent("Unload chunk"), false, ExecuteContext, new ContextCommand("unload_chunk", new object[2] { chunk_x, chunk_y }));
 
-								menu.AddItem(new GUIContent("Print tile ID"), false, ExecuteContext, new ContextCommand("get_tile_id", new object[2] { tile_x, tile_y }));
-								menu.AddItem(new GUIContent("Change tile ID"), false, ExecuteContext, new ContextCommand("change_tile_id", new object[2] { tile_x, tile_y }));
+									menu.AddItem(new GUIContent("Print tile ID"), false, ExecuteContext, new ContextCommand("get_tile_id", new object[2] { tile_x, tile_y }));
+								}
+								else
+									menu.AddItem(new GUIContent("Load chunk"), false, ExecuteContext, new ContextCommand("load_chunk", new object[2] { chunk_x, chunk_y }));
+
+								menu.AddItem(new GUIContent("Ping chunk"), false, ExecuteContext, new ContextCommand("ping_chunk", new object[2] { chunk_x, chunk_y }));
+
+								menu.AddSeparator("");
 							}
-							else
-								menu.AddItem(new GUIContent("Load chunk"), false, ExecuteContext, new ContextCommand("load_chunk", new object[2] { chunk_x, chunk_y }));
 
-							menu.AddItem(new GUIContent("Ping chunk"), false, ExecuteContext, new ContextCommand("ping_chunk", new object[2] { chunk_x, chunk_y }));
+							menu.AddItem(new GUIContent("Chunks/Load all chunks"), false, ExecuteContext, new ContextCommand("load_all_chunks", null));
 
-							menu.AddSeparator("");
+							menu.AddItem(new GUIContent("Chunks/Unload all chunks"), false, ExecuteContext, new ContextCommand("unload_all_chunks", null));
 						}
+					}
 
-						menu.AddItem(new GUIContent("Chunks/Load all chunks"), false, ExecuteContext, new ContextCommand("load_all_chunks", null));
+					if (is_dynamic_generator)
+					{
+						menu.AddSeparator("");
+						menu.AddItem(new GUIContent("Reset generator"), false, ExecuteContext, new ContextCommand("reset_generator", null));
+					}
 
-						menu.AddItem(new GUIContent("Chunks/Unload all chunks"), false, ExecuteContext, new ContextCommand("unload_all_chunks", null));
-
+					if (controller.ready)
+					{
 						menu.AddSeparator("");
 						menu.AddItem(new GUIContent("End editing"), false, ExecuteContext, new ContextCommand("end_editing", null));
-
 					}
 
 					menu.ShowAsContext();
