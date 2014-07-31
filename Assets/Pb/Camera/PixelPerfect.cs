@@ -7,8 +7,7 @@ namespace Pb
 	namespace Camera
 	{
 		/// <summary>
-		/// Forces the camera to align itself on pixel boundaries before rendering,
-		///	then restores the original position afterward
+		/// Forces the camera to align itself on pixel boundaries before rendering, then restores the original position afterward
 		/// </summary>
 		public class PixelPerfect :
 			MonoBehaviour
@@ -21,14 +20,13 @@ namespace Pb
 			/// A cache for the actual position of the camera
 			/// </summary>
 			public Vector3 cache_position = new Vector3(0, 0, 0);
-			public Vector3 render_position;
 			/// <summary>
 			/// Caches the position of the camera, then aligns it on pixel boundaries
 			/// </summary>
 			public void OnPreRender()
 			{
 				cache_position = transform.position;
-				transform.position = render_position = new Vector3(Mathf.Round(transform.position.x * pixels_per_unit) / pixels_per_unit, Mathf.Round(transform.position.y * pixels_per_unit) / pixels_per_unit, transform.position.z);
+				transform.position = new Vector3(Mathf.Round(transform.position.x * pixels_per_unit) / pixels_per_unit, Mathf.Round(transform.position.y * pixels_per_unit) / pixels_per_unit, transform.position.z);
 			}
 			/// <summary>
 			/// Restores the original camera position

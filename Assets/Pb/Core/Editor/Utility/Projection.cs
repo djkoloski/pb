@@ -34,7 +34,6 @@ namespace Pb
 				hit = new Vector3();
 				return false;
 			}
-			// Casts the mouse position using a transform and local normal
 			/// <summary>
 			/// Casts the mouse position on the screen onto a plane using a transform and a local normal
 			/// </summary>

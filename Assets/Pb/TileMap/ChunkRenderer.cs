@@ -21,7 +21,7 @@ namespace Pb
 			/// <param name="tmc">The TileMapController loading the chunk</param>
 			/// <param name="chunk">The chunk being rendered</param>
 			/// <param name="chunk_go">The game object made for the chunk</param>
-			/// <returns></returns>
+			/// <returns>Whether the chunk was rendered</returns>
 			public virtual bool Render(TileMapController tmc, Chunk chunk, GameObject chunk_go)
 			{
 				return false;

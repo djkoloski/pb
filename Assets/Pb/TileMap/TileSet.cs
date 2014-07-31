@@ -68,7 +68,6 @@ namespace Pb
 			{
 				return tiles[index];
 			}
-
 			/// <summary>
 			/// Initializes the tile set when it is newly instantiated
 			/// </summary>

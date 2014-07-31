@@ -44,7 +44,7 @@ namespace Pb
 			/// Gets the tile set containing the given ID and the local ID of that tile
 			/// </summary>
 			/// <param name="id">The ID to look for a matching tile set of</param>
-			/// <param name="tile_id">The local ID of the tile</param>
+			/// <param name="local_id">The local ID of the tile</param>
 			/// <returns>The tile set, or null if none match</returns>
 			public TileSet GetTileSetAndID(int id, out int local_id)
 			{
@@ -92,7 +92,7 @@ namespace Pb
 			/// <summary>
 			/// Adds a new tile set to the library
 			/// </summary>
-			/// <param name="tile_set"></param>
+			/// <param name="tile_set">The tile set to add</param>
 			/// <returns>The first ID of the added tile set or -1 if the tile set was not added</returns>
 			public int AddTileSet(TileSet tile_set)
 			{

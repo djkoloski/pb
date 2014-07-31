@@ -583,7 +583,7 @@ namespace Pb
 			/// <summary>
 			/// Removes the given key from the map
 			/// </summary>
-			/// <param name="key"></param>
+			/// <param name="key">The key to remove from the map</param>
 			/// <returns>Whether the key was removed from the map</returns>
 			public bool Remove(TKey key)
 			{

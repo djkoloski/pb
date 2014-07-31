@@ -57,12 +57,12 @@ namespace Pb
 				);
 		}
 		/// <summary>
-		/// Calculates the RGB color specified by the given HSV coordinates
+		/// Calculates the RGB color corresponding to the given HSV coordinates
 		/// </summary>
 		/// <param name="h">The hue component of the color</param>
 		/// <param name="s">The saturation component of the color</param>
 		/// <param name="v">The value component of the color</param>
-		/// <returns></returns>
+		/// <returns>The RGB color corresponding to the given HSV coordinates</returns>
 		public static UnityEngine.Color HSVToRGB(float h, float s = 1.0f, float v = 1.0f)
 		{
 			h = h * 360.0f % 360.0f;

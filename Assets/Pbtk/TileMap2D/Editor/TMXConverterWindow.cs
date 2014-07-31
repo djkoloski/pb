@@ -8,21 +8,51 @@ namespace Pbtk
 {
 	namespace TileMap2D
 	{
+		/// <summary>
+		/// Converts TMX source files into compatible TileMap2D files
+		/// </summary>
 		public class TMXConverterWindow :
 			EditorWindow
 		{
+			/// <summary>
+			/// The path to the TMX
+			/// </summary>
 			public string input_path;
+			/// <summary>
+			/// The name to give to the output TM2D files
+			/// </summary>
 			public string output_name;
+			/// <summary>
+			/// The tile sets directory relative to Assets/
+			/// </summary>
 			public string tile_sets_dir;
+			/// <summary>
+			/// The number of pixels per unit to render tile sets imported with
+			/// </summary>
 			public float pixels_per_unit;
+			/// <summary>
+			/// The chunk width in tiles
+			/// </summary>
 			public int chunk_size_x;
+			/// <summary>
+			/// The chunk height in tiles
+			/// </summary>
 			public int chunk_size_y;
+			/// <summary>
+			/// Whether to force tile sets to be rebuilt
+			/// </summary>
 			public bool force_rebuild_tile_sets;
+			/// <summary>
+			/// Opens a new TMX converter window
+			/// </summary>
 			[MenuItem("Pbtk/TileMap2D/TMX Converter")]
 			static void Init()
 			{
 				EditorWindow.GetWindow(typeof(TMXConverterWindow), false, "TMX Converter");
 			}
+			/// <summary>
+			/// Draws the window's GUI
+			/// </summary>
 			public void OnGUI()
 			{
 				EditorGUILayout.BeginHorizontal();
@@ -88,6 +118,9 @@ namespace Pbtk
 					ConvertTMX();
 				EditorGUILayout.EndHorizontal();
 			}
+			/// <summary>
+			/// Converts the TMX into TM2D files
+			/// </summary>
 			public void ConvertTMX()
 			{
 				TileMap tile_map = TMXConverter.ConvertTMX(

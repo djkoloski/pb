@@ -54,7 +54,7 @@ namespace Pbtk
 			/// <summary>
 			/// Makes a new tile set from an image with the given parameters
 			/// </summary>
-			/// <param name="source_path">The path to the original image file (system path)</param>
+			/// <param name="source_system_path">The path to the original image file</param>
 			/// <param name="tile_set_dir">Where to put the image and tile set and look for them (asset path)</param>
 			/// <param name="pixels_per_unit">The ratio between pixels and units</param>
 			/// <param name="margin_x">The number of pixels around the edge of the image to cut around horizontally</param>
@@ -66,7 +66,6 @@ namespace Pbtk
 			/// <param name="offset_x">The drawing offset along the X axis</param>
 			/// <param name="offset_y">The drawing offset along the Y axis</param>
 			/// <param name="transparent_color">A color to set to transparent in the image or a color with an alpha of 0 to indicate no transparent color</param>
-			/// <param name="tile_set_dir">The directory to place the resulting tile set in</param>
 			/// <param name="flip_x_indices">Whether to flip X indices from left to right</param>
 			/// <param name="flip_y_indices">Whether to flip Y indices from bottom to top</param>
 			/// <param name="force_rebuild">Whether to rebuild sprite metadata for sprites that already exist (usually false)</param>

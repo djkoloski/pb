@@ -29,9 +29,9 @@ namespace Pbtk
 			/// Renders a chunk of a 2D tile map
 			/// </summary>
 			/// <param name="tmc">The TileMapController loading the chunk</param>
-			/// <param name="chunk">The chunk being rendered</param>
+			/// <param name="pb_chunk">The chunk being rendered</param>
 			/// <param name="chunk_go">The game object made for the chunk</param>
-			/// <returns></returns>
+			/// <returns>Whether the chunk was rendered</returns>
 			public override bool Render(Pb.TileMap.TileMapController tmc, Pb.TileMap.Chunk pb_chunk, GameObject chunk_go)
 			{
 				if (pb_chunk == null)

@@ -63,6 +63,7 @@ namespace Pb
 			/// <summary>
 			/// Gets the type of the scriptable object from the mono script
 			/// </summary>
+			/// <returns>Whether the the current script file contains a class that can be made into a scriptable object</returns>
 			public bool ParseScriptType()
 			{
 				if (script == null)

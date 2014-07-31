@@ -15,8 +15,17 @@ namespace Pbtk
 			/// </summary>
 			public enum GizmosDrawTime
 			{
+				/// <summary>
+				/// Indicates that gizmos should always be drawn
+				/// </summary>
 				Always,
+				/// <summary>
+				/// Indicates that gizmos should only be drawn when the controller is selected
+				/// </summary>
 				Selected,
+				/// <summary>
+				/// Indicates that gizmos should never be drawn
+				/// </summary>
 				Never
 			}
 			/// <summary>
@@ -124,6 +133,7 @@ namespace Pbtk
 			/// <param name="y">The Y coordinate of the tile</param>
 			/// <param name="l">The layer of the tile</param>
 			/// <param name="new_id">The ID to set the tile to</param>
+			/// <param name="change_chunk">Whether to change the ID in the chunk as well</param>
 			public void ChangeTile(int x, int y, int l, int new_id, bool change_chunk = true)
 			{
 				if (base.tile_map == null)

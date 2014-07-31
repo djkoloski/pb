@@ -7,6 +7,9 @@ namespace Pb
 {
 	namespace Utility
 	{
+		/// <summary>
+		/// Decompresses blocks of compressed data
+		/// </summary>
 		public class Decompress
 		{
 			/// <summary>

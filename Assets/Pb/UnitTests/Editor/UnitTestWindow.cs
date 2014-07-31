@@ -16,7 +16,6 @@ namespace Pb
 			/// Whether to run the collections unit tests
 			/// </summary>
 			public bool collections = false;
-
 			/// <summary>
 			/// Opens the unit testing window
 			/// </summary>
@@ -25,7 +24,6 @@ namespace Pb
 			{
 				EditorWindow.GetWindow(typeof(UnitTestWindow), false, "Pb Unit Testing");
 			}
-
 			/// <summary>
 			/// The unit testing GUI
 			/// </summary>
@@ -43,7 +41,6 @@ namespace Pb
 					RunUnitTests();
 				EditorGUILayout.EndHorizontal();
 			}
-
 			/// <summary>
 			/// Runs the selected unit tests
 			/// </summary>
