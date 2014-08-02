@@ -3,14 +3,14 @@ namespace Pb
 	/// <summary>
 	/// A simple Unity-friendly debugging class
 	/// </summary>
-	public static class Debug
+	public static class Assert
 	{
 		/// <summary>
 		/// Asserts the given condition at runtime, possibly supplying a message with it
 		/// </summary>
 		/// <param name="condition">The condition to assert as true</param>
 		/// <param name="message">The message to supply along with the assertion</param>
-		public static void Assert(bool condition, string message = null)
+		public static void Condition(bool condition, string message = null)
 		{
 			if (!condition)
 			{

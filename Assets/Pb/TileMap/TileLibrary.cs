@@ -13,13 +13,6 @@ namespace Pb
 		public class TileLibrary
 		{
 			/// <summary>
-			/// A serializable map of tile sets
-			/// </summary>
-			[System.Serializable]
-			public class TileSetMap :
-				Map<int, TileSet>
-			{ }
-			/// <summary>
 			/// The tile sets in the library
 			/// </summary>
 			public TileSetMap tile_sets;

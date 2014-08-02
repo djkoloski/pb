@@ -39,19 +39,19 @@ namespace Pb
 
 				// This is a hack around a bug regarding selectable labels having the wrong height
 				// <hack>
-				GUILayout.Space(18 * layer_names.Length);
+				GUILayout.Space(layer_names.Length * Utility.GUI.block_height);
 
 				for (int i = layer_names.Length - 1; i >= 0; --i)
 				{
-					GUILayout.Space(-18);
+					GUILayout.Space(-Utility.GUI.block_height);
 					EditorGUILayout.BeginHorizontal();
 					EditorGUILayout.SelectableLabel(layer_names[i]);
 					EditorGUILayout.SelectableLabel(layer_ids[i].ToString());
 					EditorGUILayout.EndHorizontal();
-					GUILayout.Space(-34);
+					GUILayout.Space(-Utility.GUI.block_height * 2);
 				}
 
-				GUILayout.Space(18 * layer_names.Length);
+				GUILayout.Space(layer_names.Length * Utility.GUI.block_height);
 				// </hack>
 
 				EditorGUILayout.BeginHorizontal();

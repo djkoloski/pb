@@ -14,12 +14,6 @@ namespace Pb
 			MonoBehaviour
 		{
 			/// <summary>
-			/// A map from a set of chunk coordinates to the loaded chunk
-			/// </summary>
-			public class ChunkMap :
-				Map<ITuple3, GameObject>
-			{ }
-			/// <summary>
 			/// The tile map to use chunks from
 			/// </summary>
 			public TileMap tile_map;

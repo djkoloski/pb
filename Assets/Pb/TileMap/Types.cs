@@ -1,3 +1,4 @@
+using UnityEngine;
 using Pb.Collections;
 
 namespace Pb
@@ -37,5 +38,18 @@ namespace Pb
 				base(a, b, c)
 			{ }
 		}
+		/// <summary>
+		/// A serializable map of tile sets
+		/// </summary>
+		[System.Serializable]
+		public class TileSetMap :
+			Map<int, TileSet>
+		{ }
+		/// <summary>
+		/// A map from a set of chunk coordinates to the loaded chunk
+		/// </summary>
+		public class ChunkMap :
+			Map<ITuple3, GameObject>
+		{ }
 	}
 }

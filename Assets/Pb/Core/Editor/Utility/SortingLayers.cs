@@ -65,7 +65,7 @@ namespace Pb
 					if (names[i] == name)
 						return ids[i];
 
-				AddSortingLayer.Invoke(null, new object[0]);
+				AddSortingLayer.Invoke(null, null);
 				SetSortingLayerName.Invoke(null, new object[2]{ names.Length, name });
 
 				ids = GetSortingLayerUniqueIDs();
