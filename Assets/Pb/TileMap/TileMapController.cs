@@ -96,6 +96,8 @@ namespace Pb
 					throw new System.InvalidOperationException("Begin() never called on tile map");
 
 				Utility.Object.ContextualDestroy(render_root.gameObject);
+				foreach (KeyValuePair<ITuple3, ChunkEntry> pair in loaded_chunks)
+					tile_map.UnloadChunk(pair.Value.chunk, pair.Key.Item1, pair.Key.Item2, pair.Key.Item3);
 				loaded_chunks.Clear();
 			}
 			/// <summary>
@@ -115,13 +117,13 @@ namespace Pb
 				return loaded_chunks.ContainsKey(new ITuple3(x, y, z));
 			}
 			/// <summary>
-			/// Gets a currently-loaded chunk
+			/// Gets a currently-loaded chunk entry
 			/// </summary>
 			/// <param name="x">The X position of the chunk</param>
 			/// <param name="y">The Y position of the chunk</param>
 			/// <param name="z">The Z position of the chunk</param>
 			/// <returns>The chunk or null if the chunk is not loaded</returns>
-			public GameObject GetChunk(int x = 0, int y = 0, int z = 0)
+			public ChunkEntry GetChunkEntry(int x = 0, int y = 0, int z = 0)
 			{
 				if (!initialized)
 					Init();
@@ -148,7 +150,7 @@ namespace Pb
 
 				if (!loaded_chunks.ContainsKey(new ITuple3(x, y, z)))
 				{
-					Chunk chunk = tile_map.GetChunk(x, y, z);
+					Chunk chunk = tile_map.LoadChunk(x, y, z);
 
 					if (chunk == null)
 						return false;
@@ -169,7 +171,7 @@ namespace Pb
 						return false;
 					}
 
-					loaded_chunks.Add(new ITuple3(x, y, z), chunk_go);
+					loaded_chunks.Add(new ITuple3(x, y, z), new ChunkEntry(chunk, chunk_go));
 					return true;
 				}
 
@@ -191,7 +193,9 @@ namespace Pb
 
 				if (loaded_chunks.ContainsKey(new ITuple3(x, y, z)))
 				{
-					Utility.Object.ContextualDestroy(loaded_chunks[new ITuple3(x, y, z)]);
+					ChunkEntry entry = loaded_chunks[new ITuple3(x, y, z)];
+					tile_map.UnloadChunk(entry.chunk);
+					Utility.Object.ContextualDestroy(entry.chunk_root);
 					loaded_chunks.Remove(new ITuple3(x, y, z));
 					return true;
 				}

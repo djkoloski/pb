@@ -19,7 +19,7 @@ namespace Pb
 			/// <summary>
 			/// A cache for the actual position of the camera
 			/// </summary>
-			public Vector3 cache_position = new Vector3(0, 0, 0);
+			private Vector3 cache_position = new Vector3(0, 0, 0);
 			/// <summary>
 			/// Caches the position of the camera, then aligns it on pixel boundaries
 			/// </summary>

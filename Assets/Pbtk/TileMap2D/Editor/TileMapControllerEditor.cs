@@ -255,7 +255,7 @@ namespace Pbtk
 				switch (command.name)
 				{
 					case "ping_chunk":
-						EditorGUIUtility.PingObject(chunk_manager.GetChunk((int)command.args[0], (int)command.args[1], 0));
+						EditorGUIUtility.PingObject(controller.GetChunkEntry((int)command.args[0], (int)command.args[1], 0).chunk);
 						break;
 					case "begin_editing":
 						controller.Begin();

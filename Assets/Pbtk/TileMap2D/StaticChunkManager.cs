@@ -25,11 +25,20 @@ namespace Pbtk
 			/// <param name="y">The Y coordinate of the chunk</param>
 			/// <param name="z">The Z coordinate of the chunk</param>
 			/// <returns>The loaded chunk</returns>
-			public override Pb.TileMap.Chunk GetChunk(int x, int y, int z)
+			public override Pb.TileMap.Chunk LoadChunk(int x, int y, int z)
 			{
 				string path = Pb.Path.Combine(resources_path, "chunk_" + x + "_" + y);
 				return Resources.Load<Chunk>(path);
 			}
+			/// <summary>
+			/// Unloads the given chunk from active memory
+			/// </summary>
+			/// <param name="chunk">The chunk to unload</param>
+			/// <param name="x">The X coordinate of the chunk</param>
+			/// <param name="y">The Y coordinate of the chunk</param>
+			/// <param name="z">The Z coordinate of the chunk</param>
+			public override void UnloadChunk(Pb.TileMap.Chunk chunk, int x, int y, int z)
+			{ }
 		}
 	}
 }

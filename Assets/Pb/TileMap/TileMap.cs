@@ -34,12 +34,26 @@ namespace Pb
 			/// <param name="y">The Y coordinate of the chunk</param>
 			/// <param name="z">The Z coordinate of the chunk</param>
 			/// <returns>The chunk or null if no chunk was returned by the manager</returns>
-			public Chunk GetChunk(int x = 0, int y = 0, int z = 0)
+			public Chunk LoadChunk(int x = 0, int y = 0, int z = 0)
 			{
 				if (chunk_manager == null)
 					throw new System.InvalidOperationException();
 
-				return chunk_manager.GetChunk(x, y, z);
+				return chunk_manager.LoadChunk(x, y, z);
+			}
+			/// <summary>
+			/// Unloads the given chunk through the chunk manager
+			/// </summary>
+			/// <param name="chunk">The chunk to unload</param>
+			/// <param name="x">The chunk's X coordinate</param>
+			/// <param name="y">The chunk's Y coordinate</param>
+			/// <param name="z">The chunk's Z coordinate</param>
+			public void UnloadChunk(Chunk chunk, int x = 0, int y = 0, int z = 0)
+			{
+				if (chunk_manager == null)
+					throw new System.InvalidOperationException();
+
+				chunk_manager.UnloadChunk(chunk, x, y, z);
 			}
 		}
 		/// <summary>

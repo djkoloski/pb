@@ -573,14 +573,6 @@ namespace Pb
 				return ContainsValue_(value);
 			}
 			/// <summary>
-			/// Gets an enumerator for the map
-			/// </summary>
-			/// <returns>An enumerator for the map</returns>
-			public Enumerator GetEnumerator()
-			{
-				return GetEnumerator_();
-			}
-			/// <summary>
 			/// Removes the given key from the map
 			/// </summary>
 			/// <param name="key">The key to remove from the map</param>

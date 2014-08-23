@@ -86,8 +86,8 @@ namespace Pbtk
 
 				Gizmos.matrix = transform.localToWorldMatrix;
 				tile_map.geometry.DrawGizmos(
-					chunk_manager.chunk_size_x, chunk_manager.chunk_size_y,
-					chunk_manager.chunk_left, chunk_manager.chunk_right, chunk_manager.chunk_bottom, chunk_manager.chunk_top,
+					chunk_manager.chunk_size_x, chunk_manager.chunk_size_y, 1,
+					chunk_manager.chunk_left, chunk_manager.chunk_right, chunk_manager.chunk_bottom, chunk_manager.chunk_top, 0, 0,
 					gizmo_color_tile, gizmo_color_chunk,
 					draw_tile_boundaries, draw_chunk_boundaries
 				);
@@ -109,14 +109,17 @@ namespace Pbtk
 
 				if (tile_map.chunk_manager == null)
 					throw new System.InvalidOperationException("Tile ID requested without a chunk manager to reference");
-				ChunkManager2D chunk_manager = tile_map.chunk_manager as ChunkManager2D;
+				ChunkManager2D chunk_manager = (ChunkManager2D)tile_map.chunk_manager;
 				if (chunk_manager == null)
 					throw new System.InvalidOperationException("Attached chunk manager is not a TileMap2D chunk manager");
+
+				if (!IsChunkLoaded(x, y))
+					throw new System.InvalidOperationException("The chunk containing the requested tile is not loaded");
 
 				int chunk_x = Pb.Math.FloorDivide(x, chunk_manager.chunk_size_x);
 				int chunk_y = Pb.Math.FloorDivide(y, chunk_manager.chunk_size_y);
 
-				Chunk chunk = chunk_manager.GetChunk(chunk_x, chunk_y, 0) as Chunk;
+				Chunk chunk = (Chunk)GetChunkEntry(x, y, 0).chunk;
 
 				if (chunk == null)
 					throw new System.ArgumentException("Given tile coordinates do not have a valid chunk associated with them");
@@ -148,10 +151,13 @@ namespace Pbtk
 				if (chunk_manager == null)
 					throw new System.InvalidOperationException("Attached chunk manager is not a TileMap2D chunk manager");
 
+				if (!IsChunkLoaded(x, y))
+					throw new System.InvalidOperationException("The chunk containing the requested tile is not loaded");
+
 				int chunk_x = Pb.Math.FloorDivide(x, chunk_manager.chunk_size_x);
 				int chunk_y = Pb.Math.FloorDivide(y, chunk_manager.chunk_size_y);
 
-				Chunk chunk = chunk_manager.GetChunk(chunk_x, chunk_y, 0) as Chunk;
+				Chunk chunk = (Chunk)GetChunkEntry(x, y, 0).chunk;
 
 				if (chunk == null)
 					throw new System.ArgumentException("Given tile coordinates do not have a valid chunk associated with them");
@@ -162,8 +168,7 @@ namespace Pbtk
 				if (change_chunk)
 					chunk.ids[(l * chunk_manager.chunk_size_y + local_y) * chunk_manager.chunk_size_x + local_x] = new_id;
 
-				if (IsChunkLoaded(chunk_x, chunk_y, 0))
-					GetChunk(chunk_x, chunk_y, 0).GetComponent<ChunkController>().RerenderTile(tile_map, chunk.index_x, chunk.index_y, local_x, local_y, l, new_id);
+				GetChunkEntry(chunk_x, chunk_y, 0).chunk_root.GetComponent<ChunkController>().RerenderTile(tile_map, chunk.index_x, chunk.index_y, local_x, local_y, l, new_id);
 			}
 		}
 	}

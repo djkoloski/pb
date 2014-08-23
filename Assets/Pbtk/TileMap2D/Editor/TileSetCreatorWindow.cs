@@ -157,7 +157,6 @@ namespace Pbtk
 					ref flip_y, this,
 					"Changed whether to flip tile set Y order");
 				EditorGUILayout.EndHorizontal();
-				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
 				Pb.Utility.Undo.RegisterChange<bool>(
