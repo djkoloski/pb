@@ -269,81 +269,81 @@ namespace Pb
 				{
 					case Tiling.Rectangular:
 					case Tiling.Isometric:
-					{
-						// Z-aligned lines
-						for (int x = left; x <= right; ++x)
+						{
+							// Z-aligned lines
+							for (int x = left; x <= right; ++x)
+								for (int y = bottom; y <= top; ++y)
+									if (SetGizmosColor(x % size_x == 0 && y % size_y == 0, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+										Gizmos.DrawLine(TileToNormal(x, y, back), TileToNormal(x, y, front));
+
+							// Y-aligned lines
+							for (int x = left; x <= right; ++x)
+								for (int z = back; z <= front; ++z)
+									if (SetGizmosColor(x % size_x == 0 && z % size_z == 0, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+										Gizmos.DrawLine(TileToNormal(x, bottom, z), TileToNormal(x, top, z));
+
+							// X-aligned lines
 							for (int y = bottom; y <= top; ++y)
-								if (SetGizmosColor(x % size_x == 0 && y % size_y == 0, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-									Gizmos.DrawLine(TileToNormal(x, y, back), TileToNormal(x, y, front));
+								for (int z = back; z <= front; ++z)
+									if (SetGizmosColor(y % size_y == 0 && z % size_z == 0, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+										Gizmos.DrawLine(TileToNormal(left, y, z), TileToNormal(right, y, z));
 
-						// Y-aligned lines
-						for (int x = left; x <= right; ++x)
-							for (int z = back; z <= front; ++z)
-								if (SetGizmosColor(x % size_x == 0, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-									Gizmos.DrawLine(TileToNormal(x, bottom, z), TileToNormal(x, top, z));
-
-						// X-aligned lines
-						for (int y = bottom; y <= top; ++y)
-							for (int z = back; z <= front; ++z)
-								if (SetGizmosColor(y % size_y == 0, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-									Gizmos.DrawLine(TileToNormal(left, y, z), TileToNormal(right, y, z));
-
-						break;
-					}
+							break;
+						}
 					case Tiling.StaggeredEven:
 					case Tiling.StaggeredOdd:
-					{
-						bool border_even = (tiling == Tiling.StaggeredOdd);
-
-						for (int z = back; z < front; ++z)
 						{
-							for (int y = bottom; y < top; ++y)
+							bool border_even = (tiling == Tiling.StaggeredOdd);
+
+							for (int z = back; z < front; ++z)
 							{
-								for (int x = left; x < right; ++x)
+								for (int y = bottom; y < top; ++y)
 								{
-									bool border_chunk_down = (y % size_y == 0);
-									bool border_chunk_up = ((y + 1) % size_y == 0);
-									bool border_chunk_left = (x % size_x == 0) && ((y % 2 == 0) == border_even);
-									bool border_chunk_right = ((x + 1) % size_x == 0) && ((y % 2 == 0) != border_even);
-									bool border_chunk_back = (z % size_z == 0);
-									bool border_chunk_front = ((z + 1) % size_z == 0);
-									Vector3 pos = TileToNormal(x, y, z);
+									for (int x = left; x < right; ++x)
+									{
+										bool border_chunk_down = (y % size_y == 0);
+										bool border_chunk_up = ((y + 1) % size_y == 0);
+										bool border_chunk_left = (x % size_x == 0) && ((y % 2 == 0) == border_even);
+										bool border_chunk_right = ((x + 1) % size_x == 0) && ((y % 2 == 0) != border_even);
+										bool border_chunk_back = (z % size_z == 0);
+										bool border_chunk_front = ((z + 1) % size_z == 0);
+										Vector3 pos = TileToNormal(x, y, z);
 
-									// back square
-									if (SetGizmosColor((border_chunk_down || border_chunk_left) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos, pos + new Vector3(1, 0, 0));
-									if (SetGizmosColor((border_chunk_right || border_chunk_down) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(1, 0, 0), pos + new Vector3(1, 1, 0));
-									if (SetGizmosColor((border_chunk_up || border_chunk_right) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(1, 1, 0), pos + new Vector3(0, 1, 0));
-									if (SetGizmosColor((border_chunk_left || border_chunk_up) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(0, 1, 0), pos);
+										// back square
+										if (SetGizmosColor((border_chunk_down || border_chunk_left) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos, pos + new Vector3(1, 0, 0));
+										if (SetGizmosColor((border_chunk_right || border_chunk_down) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(1, 0, 0), pos + new Vector3(1, 1, 0));
+										if (SetGizmosColor((border_chunk_up || border_chunk_right) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(1, 1, 0), pos + new Vector3(0, 1, 0));
+										if (SetGizmosColor((border_chunk_left || border_chunk_up) && border_chunk_back, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(0, 1, 0), pos);
 
-									// midlines
-									if (SetGizmosColor(border_chunk_down || border_chunk_left, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos, pos + new Vector3(0, 0, 1));
-									if (SetGizmosColor(border_chunk_right || border_chunk_down, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(1, 0, 0), pos + new Vector3(1, 0, 1));
-									if (SetGizmosColor(border_chunk_up || border_chunk_right, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(1, 1, 0), pos + new Vector3(1, 1, 1));
-									if (SetGizmosColor(border_chunk_left || border_chunk_up, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(0, 1, 0), pos + new Vector3(0, 1, 1));
+										// midlines
+										if (SetGizmosColor(border_chunk_down && border_chunk_left, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos, pos + new Vector3(0, 0, 1));
+										if (SetGizmosColor(border_chunk_right && border_chunk_down, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(1, 0, 0), pos + new Vector3(1, 0, 1));
+										if (SetGizmosColor(border_chunk_up && border_chunk_right, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(1, 1, 0), pos + new Vector3(1, 1, 1));
+										if (SetGizmosColor(border_chunk_left && border_chunk_up, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(0, 1, 0), pos + new Vector3(0, 1, 1));
 
-									// front square
-									if (SetGizmosColor((border_chunk_down || border_chunk_left) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(0, 0, 1), pos + new Vector3(1, 0, 1));
-									if (SetGizmosColor((border_chunk_right || border_chunk_down) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(1, 0, 1), pos + new Vector3(1, 1, 1));
-									if (SetGizmosColor((border_chunk_up || border_chunk_right) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(1, 1, 1), pos + new Vector3(0, 1, 1));
-									if (SetGizmosColor((border_chunk_left || border_chunk_up) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
-										Gizmos.DrawLine(pos + new Vector3(0, 1, 1), pos + new Vector3(0, 0, 1));
+										// front square
+										if (SetGizmosColor((border_chunk_down || border_chunk_left) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(0, 0, 1), pos + new Vector3(1, 0, 1));
+										if (SetGizmosColor((border_chunk_right || border_chunk_down) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(1, 0, 1), pos + new Vector3(1, 1, 1));
+										if (SetGizmosColor((border_chunk_up || border_chunk_right) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(1, 1, 1), pos + new Vector3(0, 1, 1));
+										if (SetGizmosColor((border_chunk_left || border_chunk_up) && border_chunk_front, gizmos_color_tile, gizmos_color_chunk, draw_tiles, draw_chunks))
+											Gizmos.DrawLine(pos + new Vector3(0, 1, 1), pos + new Vector3(0, 0, 1));
+									}
 								}
 							}
-						}
 
-						break;
-					}
+							break;
+						}
 					default:
 						throw new System.InvalidOperationException("Unsupported tile map tiling");
 				}
