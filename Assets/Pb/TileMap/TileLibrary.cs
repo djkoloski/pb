@@ -80,6 +80,8 @@ namespace Pb
 			{
 				int local_id = 0;
 				TileSet tile_set = GetTileSetAndID(id, out local_id);
+				if (tile_set == null)
+					return null;
 				return tile_set.GetTile<T>(local_id);
 			}
 			/// <summary>
