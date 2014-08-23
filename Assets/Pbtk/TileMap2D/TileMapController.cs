@@ -119,7 +119,7 @@ namespace Pbtk
 				int chunk_x = Pb.Math.FloorDivide(x, chunk_manager.chunk_size_x);
 				int chunk_y = Pb.Math.FloorDivide(y, chunk_manager.chunk_size_y);
 
-				Chunk chunk = (Chunk)GetChunkEntry(x, y, 0).chunk;
+				Chunk chunk = (Chunk)GetChunk(x, y, 0);
 
 				if (chunk == null)
 					throw new System.ArgumentException("Given tile coordinates do not have a valid chunk associated with them");
@@ -157,7 +157,7 @@ namespace Pbtk
 				int chunk_x = Pb.Math.FloorDivide(x, chunk_manager.chunk_size_x);
 				int chunk_y = Pb.Math.FloorDivide(y, chunk_manager.chunk_size_y);
 
-				Chunk chunk = (Chunk)GetChunkEntry(x, y, 0).chunk;
+				Chunk chunk = (Chunk)GetChunk(x, y, 0);
 
 				if (chunk == null)
 					throw new System.ArgumentException("Given tile coordinates do not have a valid chunk associated with them");
@@ -168,7 +168,7 @@ namespace Pbtk
 				if (change_chunk)
 					chunk.ids[(l * chunk_manager.chunk_size_y + local_y) * chunk_manager.chunk_size_x + local_x] = new_id;
 
-				GetChunkEntry(chunk_x, chunk_y, 0).chunk_root.GetComponent<ChunkController>().RerenderTile(tile_map, chunk.index_x, chunk.index_y, local_x, local_y, l, new_id);
+				GetChunkRoot(chunk_x, chunk_y, 0).GetComponent<ChunkController>().RerenderTile(tile_map, chunk.index_x, chunk.index_y, local_x, local_y, l, new_id);
 			}
 		}
 	}

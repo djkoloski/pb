@@ -255,7 +255,7 @@ namespace Pbtk
 				switch (command.name)
 				{
 					case "ping_chunk":
-						EditorGUIUtility.PingObject(controller.GetChunkEntry((int)command.args[0], (int)command.args[1], 0).chunk);
+						EditorGUIUtility.PingObject(controller.GetChunk((int)command.args[0], (int)command.args[1], 0));
 						break;
 					case "begin_editing":
 						controller.Begin();
@@ -264,20 +264,20 @@ namespace Pbtk
 						controller.End();
 						break;
 					case "load_chunk":
-						controller.LoadChunk((int)command.args[0], (int)command.args[1], 0);
+						controller.LoadAndRenderChunk((int)command.args[0], (int)command.args[1], 0);
 						break;
 					case "unload_chunk":
-						controller.UnloadChunk((int)command.args[0], (int)command.args[1], 0);
+						controller.UnloadAndUnrenderChunk((int)command.args[0], (int)command.args[1], 0);
 						break;
 					case "load_all_chunks":
 						for (int x = chunk_manager.chunk_left; x <= chunk_manager.chunk_right; ++x)
 							for (int y = chunk_manager.chunk_bottom; y <= chunk_manager.chunk_top; ++y)
-								controller.LoadChunk(x, y, 0);
+								controller.LoadAndRenderChunk(x, y, 0);
 						break;
 					case "unload_all_chunks":
 						for (int x = chunk_manager.chunk_left; x <= chunk_manager.chunk_right; ++x)
 							for (int y = chunk_manager.chunk_bottom; y <= chunk_manager.chunk_top; ++y)
-								controller.UnloadChunk(x, y, 0);
+								controller.UnloadAndUnrenderChunk(x, y, 0);
 						break;
 					case "get_tile_id":
 						Debug.Log(controller.GetTile((int)command.args[0], (int)command.args[1], 0));
