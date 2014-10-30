@@ -14,13 +14,9 @@ namespace Pbtk
 			Pb.TileMap.GenericTileSet<TileInfo>
 		{
 			/// <summary>
-			/// The offset to draw the tiles of the tile set with in pixels along the X axis
+			/// The offset to draw the tiles of the tile set with in pixels
 			/// </summary>
-			public float draw_offset_x;
-			/// <summary>
-			/// The offset to draw the tiles of the tile set with in pixels along the Y axis
-			/// </summary>
-			public float draw_offset_y;
+			public Vector2 draw_offset;
 		}
 	}
 }

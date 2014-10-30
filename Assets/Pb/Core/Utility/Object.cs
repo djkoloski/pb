@@ -1,26 +1,23 @@
-namespace Pb
+namespace Pb.Utility
 {
-	namespace Utility
+	/// <summary>
+	/// A utility for managing Unity Objects
+	/// </summary>
+	public static class Object
 	{
 		/// <summary>
-		/// A utility for managing Unity Objects
+		/// Destroys the Object with context in mind.
+		/// If the build is for the editor, the Object is destroyed immediately.
+		/// Otherwise, the Object is destroyed normally.
 		/// </summary>
-		public static class Object
+		/// <param name="obj">The Unity Object to destroy</param>
+		public static void ContextualDestroy(UnityEngine.Object obj)
 		{
-			/// <summary>
-			/// Destroys the Object with context in mind.
-			/// If the build is for the editor, the Object is destroyed immediately.
-			/// Otherwise, the Object is destroyed normally.
-			/// </summary>
-			/// <param name="obj">The Unity Object to destroy</param>
-			public static void ContextualDestroy(UnityEngine.Object obj)
-			{
 #if UNITY_EDITOR
-				UnityEngine.Object.DestroyImmediate(obj);
+			UnityEngine.Object.DestroyImmediate(obj);
 #else
-				UnityEngine.Object.Destroy(obj);
+			UnityEngine.Object.Destroy(obj);
 #endif
-			}
 		}
 	}
 }

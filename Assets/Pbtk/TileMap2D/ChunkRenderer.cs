@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Pb.Collections;
 
 namespace Pbtk
 {
@@ -63,14 +64,13 @@ namespace Pbtk
 					layer_transform.localRotation = Quaternion.identity;
 					layer_transform.localScale = Vector3.one;
 
-					for (int y = 0; y < chunk_manager.chunk_size_y; ++y)
+					foreach (IVector2 v in IVector2.Range(IVector2.zero, chunk_manager.chunk_size))
 					{
-						for (int x = 0; x < chunk_manager.chunk_size_x; ++x)
-						{
-							GameObject tile = RenderTile(tile_map, chunk.index_x, chunk.index_y, x, y, l, chunk.ids[(l * chunk_manager.chunk_size_y + y) * chunk_manager.chunk_size_x + x]);
-							if (tile != null)
-								Pb.Utility.Parent.PreserveLocal(tile.GetComponent<Transform>(), layer_transform);
-						}
+						GameObject tile = RenderTile(tile_map, chunk.index, v, l, chunk.ids[IVector2.ToIndex(v, chunk_manager.chunk_size)]);
+						if (tile != null)
+							Pb.Utility.Parent.PreserveLocal(tile.GetComponent<Transform>(), layer_transform);
+						else
+							Debug.Log("No tile");
 					}
 				}
 
@@ -80,14 +80,12 @@ namespace Pbtk
 			/// Renders a single tile with the given parameters
 			/// </summary>
 			/// <param name="tile_map">The tile map to render the tile from</param>
-			/// <param name="chunk_index_x">The X index of the chunk rendering the tile</param>
-			/// <param name="chunk_index_y">The Y index of the chunk rendering the tile</param>
-			/// <param name="x">The local X position of the tile in the chunk</param>
-			/// <param name="y">The local Y position of the tile in the chunk</param>
+			/// <param name="chunk_index">The index of the chunk rendering the tile</param>
+			/// <param name="v">The local position of the tile in the chunk</param>
 			/// <param name="l">The layer index of the tile in the chunk</param>
 			/// <param name="gid">The GID of the tile to render</param>
 			/// <returns>The rendered tile</returns>
-			public virtual GameObject RenderTile(TileMap tile_map, int chunk_index_x, int chunk_index_y, int x, int y, int l, int gid)
+			public virtual GameObject RenderTile(TileMap tile_map, IVector2 chunk_index, IVector2 v, int l, int gid)
 			{
 				int id = gid & 0x1FFFFFFF;
 				bool flip_horiz = ((uint)gid & 0x80000000) == 0x80000000;
@@ -103,24 +101,29 @@ namespace Pbtk
 				int local_id = 0;
 				TileSet tile_set = tile_map.library.GetTileSetAndID(id, out local_id) as TileSet;
 				if (tile_set == null)
+				{
+					Debug.Log("Null tile set");
 					return null;
+				}
 
 				TileInfo info = tile_set.GetTile<TileInfo>(local_id);
 
 				if (info == null || info.sprite == null)
+				{
+					Debug.Log("Null tile info or sprite set");
 					return null;
+				}
 
-				int pos_x = chunk_index_x * (tile_map.chunk_manager as ChunkManager2D).chunk_size_x + x;
-				int pos_y = chunk_index_y * (tile_map.chunk_manager as ChunkManager2D).chunk_size_y + y;
+				IVector2 pos = IVector2.Scale(chunk_index, ((ChunkManager2D)tile_map.chunk_manager).chunk_size) + v;
 
-				GameObject tile = new GameObject(x + "_" + y);
+				GameObject tile = new GameObject(v.x + "_" + v.y);
 				Transform tile_transform = tile.GetComponent<Transform>();
 				tile_transform.localPosition =
 					tile_map.geometry.normalToMapMatrix.MultiplyPoint(
-						tile_map.geometry.TileToNormal(pos_x, pos_y, 0) +
+						tile_map.geometry.TileToNormal((IVector3)pos) +
 						new Vector3(0.5f, 0.5f, 0.0f)
 					) +
-					new Vector3(tile_set.draw_offset_x, tile_set.draw_offset_y, 0.0f);
+					(Vector3)tile_set.draw_offset;
 				tile_transform.localRotation = Quaternion.Euler(0, 0, (flip_diag ? 90 : 0));
 				tile_transform.localScale = new Vector3((flip_horiz ? -1.0f : 1.0f), (flip_vert ? -1.0f : 1.0f), 1.0f);
 
@@ -131,7 +134,7 @@ namespace Pbtk
 					sr.material = sprite_material;
 				sr.sortingLayerID = tile_map.layers[l].unity_sorting_layer_unique_id;
 				sr.sortingLayerName = tile_map.layers[l].unity_sorting_layer_name;
-				sr.sortingOrder = tile_map.geometry.TileSortingOrder(pos_x, pos_y, flip_x_precedence, flip_y_precedence);
+				sr.sortingOrder = tile_map.geometry.TileSortingOrder(pos, flip_x_precedence, flip_y_precedence);
 
 				if (info.animation != null && info.animation.length != 0)
 				{

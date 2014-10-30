@@ -43,6 +43,10 @@ namespace Pbtk
 			/// </summary>
 			public bool force_rebuild_tile_sets;
 			/// <summary>
+			/// The import delegate
+			/// </summary>
+			public TMXImportDelegate import_delegate;
+			/// <summary>
 			/// Opens a new TMX converter window
 			/// </summary>
 			[MenuItem("Pbtk/TileMap2D/TMX Converter")]
@@ -114,6 +118,13 @@ namespace Pbtk
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
+				Pb.Utility.Undo.RegisterChange<TMXImportDelegate>(
+					EditorGUILayout.ObjectField("Import delegate", import_delegate, typeof(TMXImportDelegate), false) as TMXImportDelegate,
+					ref import_delegate, this,
+					"Changed the import delegate");
+				EditorGUILayout.EndHorizontal();
+
+				EditorGUILayout.BeginHorizontal();
 				if (GUILayout.Button("Convert"))
 					ConvertTMX();
 				EditorGUILayout.EndHorizontal();
@@ -130,7 +141,8 @@ namespace Pbtk
 					pixels_per_unit,
 					chunk_size_x,
 					chunk_size_y,
-					force_rebuild_tile_sets
+					force_rebuild_tile_sets,
+					import_delegate
 					);
 				EditorGUIUtility.PingObject(tile_map);
 			}

@@ -122,8 +122,7 @@ namespace Pbtk
 
 				TileSet tile_set = Pb.Utility.Asset.GetAndEdit<TileSet>(tile_set_path);
 
-				tile_set.draw_offset_x = offset_x;
-				tile_set.draw_offset_y = offset_y;
+				tile_set.draw_offset = new Vector2(offset_x, offset_y);
 
 				bool reimport_required = false;
 				importer = AssetImporter.GetAtPath(image_path) as TextureImporter;
@@ -283,8 +282,7 @@ namespace Pbtk
 						string chunk_path = Pb.Path.Combine(resources_dir, "chunk_" + chunk_x + "_" + chunk_y + ".asset");
 						Chunk chunk = Pb.Utility.Asset.GetAndEdit<Chunk>(chunk_path);
 
-						chunk.index_x = chunk_x;
-						chunk.index_y = chunk_y;
+						chunk.index = new Pb.Collections.IVector2(chunk_x, chunk_y);
 						chunk.ids = new int[layers.Count * chunk_size_y * chunk_size_x];
 
 						int pos_x = chunk_x * chunk_size_x;
@@ -313,12 +311,9 @@ namespace Pbtk
 				string chunk_manager_path = Pb.Path.Combine(resources_dir, "chunk_manager.asset");
 				StaticChunkManager chunk_manager = Pb.Utility.Asset.GetAndEdit<StaticChunkManager>(chunk_manager_path);
 
-				chunk_manager.chunk_size_x = chunk_size_x;
-				chunk_manager.chunk_size_y = chunk_size_y;
-				chunk_manager.chunk_left = 0;
-				chunk_manager.chunk_right = chunks_x - 1;
-				chunk_manager.chunk_bottom = 0;
-				chunk_manager.chunk_top = chunks_y - 1;
+				chunk_manager.chunk_size = new Pb.Collections.IVector2(chunk_size_x, chunk_size_y);
+				chunk_manager.chunk_least = Pb.Collections.IVector2.zero;
+				chunk_manager.chunk_greatest = new Pb.Collections.IVector2(chunks_x - 1, chunks_y - 1);
 				chunk_manager.resources_path = resources_name;
 
 				return chunk_manager;

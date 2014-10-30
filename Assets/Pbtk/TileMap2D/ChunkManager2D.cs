@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Pb.Collections;
 
 namespace Pbtk
 {
@@ -16,27 +17,15 @@ namespace Pbtk
 			/// <summary>
 			/// The size of each chunk along the X axis
 			/// </summary>
-			public int chunk_size_x;
+			public IVector2 chunk_size;
 			/// <summary>
-			/// The size of each chunk along the Y axis
+			/// The index of the least chunk
 			/// </summary>
-			public int chunk_size_y;
+			public IVector2 chunk_least;
 			/// <summary>
-			/// The X index of the leftmost chunk
+			/// The index of the greatest chunk
 			/// </summary>
-			public int chunk_left;
-			/// <summary>
-			/// The X index of the rightmost chunk
-			/// </summary>
-			public int chunk_right;
-			/// <summary>
-			/// The Y index of the bottommost chunk
-			/// </summary>
-			public int chunk_bottom;
-			/// <summary>
-			/// The Y index of the topmost chunk
-			/// </summary>
-			public int chunk_top;
+			public IVector2 chunk_greatest;
 		}
 	}
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using Pb.Collections;
 
 namespace Pbtk
 {
@@ -31,35 +32,19 @@ namespace Pbtk
 			/// </summary>
 			public bool on_map = false;
 			/// <summary>
-			/// The X coordinate of the tile under the cursor
+			/// The coordinates of the tile under the cursor
 			/// </summary>
-			public int tile_x = 0;
+			public IVector2 tile = IVector2.zero;
 			/// <summary>
-			/// The Y coordinate of the tile under the cursor
+			/// The coordinates of the chunk under the cursor
 			/// </summary>
-			public int tile_y = 0;
-			/// <summary>
-			/// The X coordinate of the chunk under the cursor
-			/// </summary>
-			public int chunk_x
+			public IVector2 chunk
 			{
 				get
 				{
 					if (chunk_manager != null)
-						return Pb.Math.FloorDivide(tile_x, chunk_manager.chunk_size_x);
-					return 0;
-				}
-			}
-			/// <summary>
-			/// The Y coordinate of the chunk under the cursor
-			/// </summary>
-			public int chunk_y
-			{
-				get
-				{
-					if (chunk_manager != null)
-						return Pb.Math.FloorDivide(tile_y, chunk_manager.chunk_size_y);
-					return 0;
+						return Pb.Math.FloorDivide(tile, chunk_manager.chunk_size);
+					return IVector2.zero;
 				}
 			}
 			/// <summary>
@@ -168,11 +153,11 @@ namespace Pbtk
 						}
 
 						EditorGUILayout.BeginHorizontal();
-						EditorGUILayout.LabelField("Chunk size:", chunk_manager.chunk_size_x + " x " + chunk_manager.chunk_size_y + " tiles");
+						EditorGUILayout.LabelField("Chunk size:", chunk_manager.chunk_size.x + " x " + chunk_manager.chunk_size.y + " tiles");
 						EditorGUILayout.EndHorizontal();
 
 						EditorGUILayout.BeginHorizontal();
-						EditorGUILayout.LabelField("Chunk range:", "(" + chunk_manager.chunk_left + ", " + chunk_manager.chunk_bottom + ") - (" + chunk_manager.chunk_right + ", " + chunk_manager.chunk_top + ")");
+						EditorGUILayout.LabelField("Chunk range:", "(" + chunk_manager.chunk_least.x + ", " + chunk_manager.chunk_least.y + ") - (" + chunk_manager.chunk_greatest.x + ", " + chunk_manager.chunk_greatest.y + ")");
 						EditorGUILayout.EndHorizontal();
 
 						if (is_static_chunk_manager)
@@ -255,7 +240,7 @@ namespace Pbtk
 				switch (command.name)
 				{
 					case "ping_chunk":
-						EditorGUIUtility.PingObject(controller.GetChunk((int)command.args[0], (int)command.args[1], 0));
+						EditorGUIUtility.PingObject(controller.GetChunk((IVector3)command.args[0]));
 						break;
 					case "begin_editing":
 						controller.Begin();
@@ -264,23 +249,23 @@ namespace Pbtk
 						controller.End();
 						break;
 					case "load_chunk":
-						controller.LoadAndRenderChunk((int)command.args[0], (int)command.args[1], 0);
+						controller.LoadAndRenderChunk((IVector3)command.args[0]);
 						break;
 					case "unload_chunk":
-						controller.UnloadAndUnrenderChunk((int)command.args[0], (int)command.args[1], 0);
+						controller.UnloadAndUnrenderChunk((IVector3)command.args[0]);
 						break;
 					case "load_all_chunks":
-						for (int x = chunk_manager.chunk_left; x <= chunk_manager.chunk_right; ++x)
-							for (int y = chunk_manager.chunk_bottom; y <= chunk_manager.chunk_top; ++y)
-								controller.LoadAndRenderChunk(x, y, 0);
+						for (int x = chunk_manager.chunk_least.x; x <= chunk_manager.chunk_greatest.x; ++x)
+							for (int y = chunk_manager.chunk_least.y; y <= chunk_manager.chunk_greatest.y; ++y)
+								controller.LoadAndRenderChunk((IVector3)(new IVector2(x, y)));
 						break;
 					case "unload_all_chunks":
-						for (int x = chunk_manager.chunk_left; x <= chunk_manager.chunk_right; ++x)
-							for (int y = chunk_manager.chunk_bottom; y <= chunk_manager.chunk_top; ++y)
-								controller.UnloadAndUnrenderChunk(x, y, 0);
+						for (int x = chunk_manager.chunk_least.x; x <= chunk_manager.chunk_greatest.x; ++x)
+							for (int y = chunk_manager.chunk_least.y; y <= chunk_manager.chunk_greatest.y; ++y)
+								controller.UnloadAndUnrenderChunk((IVector3)(new IVector2(x, y)));
 						break;
 					case "get_tile_id":
-						Debug.Log(controller.GetTile((int)command.args[0], (int)command.args[1], 0));
+						Debug.Log(controller.GetTile((IVector2)command.args[0], 0));
 						break;
 					case "reset_generator":
 						dynamic_chunk_generator.Reset();
@@ -305,22 +290,21 @@ namespace Pbtk
 				bool needs_repaint = false;
 				if (on_map)
 				{
-					int old_x = tile_x;
-					int old_y = tile_y;
-					int dummy_z = 0;
+					int old_x = tile.x;
+					int old_y = tile.y;
 
 					mouse_pos = controller.transform.worldToLocalMatrix.MultiplyPoint(mouse_pos);
 					mouse_pos = tile_map.geometry.mapToNormalMatrix.MultiplyPoint(mouse_pos);
 
-					tile_map.geometry.NormalToTile(mouse_pos, out tile_x, out tile_y, out dummy_z);
+					tile = tile_map.geometry.NormalToTile(mouse_pos).discardZ();
 					
-					if (old_x != tile_x || old_y != tile_y)
+					if (old_x != tile.x || old_y != tile.y)
 						needs_repaint = true;
 				}
 
 				Handles.BeginGUI();
-				GUI.Label(new Rect(10, Screen.height - 60, 200, 20), "Tile: " + tile_x + ", " + tile_y);
-				GUI.Label(new Rect(10, Screen.height - 80, 200, 20), "Chunk: " + chunk_x + ", " + chunk_y);
+				GUI.Label(new Rect(10, Screen.height - 60, 200, 20), "Tile: " + tile.x + ", " + tile.y);
+				GUI.Label(new Rect(10, Screen.height - 80, 200, 20), "Chunk: " + chunk.x + ", " + chunk.y);
 				Handles.EndGUI();
 
 				Event current = Event.current;
@@ -337,18 +321,18 @@ namespace Pbtk
 							menu.AddDisabledItem(new GUIContent("No chunk manager"));
 						else
 						{
-							if (chunk_x >= chunk_manager.chunk_left && chunk_x <= chunk_manager.chunk_right && chunk_y >= chunk_manager.chunk_bottom && chunk_y <= chunk_manager.chunk_top)
+							if (chunk.inInterval(chunk_manager.chunk_least, chunk_manager.chunk_greatest))
 							{
-								if (controller.IsChunkLoaded(chunk_x, chunk_y))
+								if (controller.IsChunkLoaded((IVector3)chunk))
 								{
-									menu.AddItem(new GUIContent("Unload chunk"), false, ExecuteContext, new ContextCommand("unload_chunk", new object[2] { chunk_x, chunk_y }));
+									menu.AddItem(new GUIContent("Unload chunk"), false, ExecuteContext, new ContextCommand("unload_chunk", new object[1] { new IVector3(chunk.x, chunk.y, 0) }));
 
-									menu.AddItem(new GUIContent("Print tile ID"), false, ExecuteContext, new ContextCommand("get_tile_id", new object[2] { tile_x, tile_y }));
+									menu.AddItem(new GUIContent("Print tile ID"), false, ExecuteContext, new ContextCommand("get_tile_id", new object[1] { new IVector2(tile.x, tile.y) }));
 								}
 								else
-									menu.AddItem(new GUIContent("Load chunk"), false, ExecuteContext, new ContextCommand("load_chunk", new object[2] { chunk_x, chunk_y }));
+									menu.AddItem(new GUIContent("Load chunk"), false, ExecuteContext, new ContextCommand("load_chunk", new object[1] { new IVector3(chunk.x, chunk.y, 0) }));
 
-								menu.AddItem(new GUIContent("Ping chunk"), false, ExecuteContext, new ContextCommand("ping_chunk", new object[2] { chunk_x, chunk_y }));
+								menu.AddItem(new GUIContent("Ping chunk"), false, ExecuteContext, new ContextCommand("ping_chunk", new object[1] { new IVector3(chunk.x, chunk.y, 0) }));
 
 								menu.AddSeparator("");
 							}

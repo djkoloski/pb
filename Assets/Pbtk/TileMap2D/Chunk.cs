@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Pb.Collections;
 
 namespace Pbtk
 {
@@ -14,13 +15,9 @@ namespace Pbtk
 			Pb.TileMap.Chunk
 		{
 			/// <summary>
-			/// The X index of the chunk
+			/// The index of the chunk
 			/// </summary>
-			public int index_x;
-			/// <summary>
-			/// The Y index of the chunk
-			/// </summary>
-			public int index_y;
+			public IVector2 index;
 			/// <summary>
 			/// The IDs of the tiles in order X, then Y, then Z
 			/// </summary>

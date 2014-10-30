@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Pb.Collections;
 
 namespace Pbtk
 {
@@ -90,7 +91,7 @@ namespace Pbtk
 								break;
 							case "image":
 								string image_path = Pb.Path.Combine(relative_dir, reader.GetAttribute("source"));
-								
+
 								Color32 transparent_color = new Color32(0, 0, 0, 0);
 								string transparent_attr = reader.GetAttribute("trans");
 								if (transparent_attr != null)
@@ -165,7 +166,8 @@ namespace Pbtk
 				float pixels_per_unit,
 				int chunk_size_x,
 				int chunk_size_y,
-				bool force_rebuild_tile_sets
+				bool force_rebuild_tile_sets,
+				TMXImportDelegate import_delegate
 				)
 			{
 				string input_system_dir = Path.GetDirectoryName(input_system_path);
@@ -176,6 +178,8 @@ namespace Pbtk
 				List<int[]> layers = new List<int[]>();
 				int map_width = 0;
 				int map_height = 0;
+
+				List<TMXObjectLayer> object_layers = new List<TMXObjectLayer>();
 
 				XmlReader reader = XmlReader.Create(input_system_path);
 
@@ -286,7 +290,7 @@ namespace Pbtk
 												}
 												else if (encoding == "csv")
 												{
-													string[] indices = reader.ReadElementContentAsString().Split(new char[]{','});
+													string[] indices = reader.ReadElementContentAsString().Split(new char[] { ',' });
 
 													for (int i = 0; i < map_height * map_width; ++i)
 														ids[i] = (int)uint.Parse(indices[i]);
@@ -319,12 +323,103 @@ namespace Pbtk
 								tile_map.layers.Add(info);
 
 								break;
+							case "objectgroup":
+								TMXObjectLayer object_layer = new TMXObjectLayer();
+
+								object_layer.name = reader.GetAttribute("name");
+								object_layer.default_alpha = GetFloatAttribute(reader, "opacity", 1.0f);
+
+								while (reader.Read())
+								{
+									if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "objectgroup")
+										break;
+
+									if (reader.NodeType == XmlNodeType.Element)
+									{
+										switch (reader.Name)
+										{
+											case "object":
+												TMXObject obj = new TMXObject();
+												obj.name = reader.GetAttribute("name");
+												obj.rotation = GetFloatAttribute(reader, "rotation", 0.0f);
+												IVector2 position = new IVector2(GetIntAttribute(reader, "x", 0), GetIntAttribute(reader, "y", 0));
+												IVector2 size = new IVector2(GetIntAttribute(reader, "width", 0), GetIntAttribute(reader, "height", 0));
+
+												if (!reader.IsEmptyElement)
+												{
+													while (reader.Read())
+													{
+														if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "object")
+															break;
+
+														if (reader.NodeType == XmlNodeType.Element)
+														{
+															switch (reader.Name)
+															{
+																case "ellipse":
+																	obj.type = TMXObjectType.Ellipse;
+																	obj.points.Add(position);
+																	obj.points.Add(size);
+																	break;
+																case "polygon":
+																	{
+																		obj.type = TMXObjectType.Polygon;
+																		string points_str = reader.GetAttribute("points");
+																		foreach (string point_str in points_str.Split(new char[] { ' ' }))
+																		{
+																			string[] coords = point_str.Split(new char[] { ',' });
+																			obj.points.Add(position + new IVector2(int.Parse(coords[0]), int.Parse(coords[1])));
+																		}
+																		break;
+																	}
+																case "polyline":
+																	{
+																		obj.type = TMXObjectType.Polyline;
+																		string points_str = reader.GetAttribute("points");
+																		foreach (string point_str in points_str.Split(new char[] { ' ' }))
+																		{
+																			string[] coords = point_str.Split(new char[] { ',' });
+																			obj.points.Add(position + new IVector2(int.Parse(coords[0]), int.Parse(coords[1])));
+																		}
+																		break;
+																	}
+																case "properties":
+																	obj.properties = ReadProperties(reader);
+																	break;
+															}
+														}
+													}
+												}
+
+												if (obj.type == TMXObjectType.None)
+												{
+													obj.type = TMXObjectType.Rectangle;
+													obj.points.Add(position);
+													obj.points.Add(size);
+												}
+
+												object_layer.objects.Add(obj);
+												break;
+											case "properties":
+												object_layer.properties = ReadProperties(reader);
+												break;
+											default:
+												break;
+										}
+									}
+								}
+
+								object_layers.Add(object_layer);
+
+								break;
 						}
 					}
 				}
 
 				tile_map.chunk_manager = ConverterUtility.BuildStaticChunks(map_width, map_height, layers, chunk_size_x, chunk_size_y, output_name);
 				tile_map.chunk_renderer = Pb.Utility.Asset.GetAndEdit<ChunkRenderer>(Pb.Path.Combine("Assets", output_name + "_renderer.asset"));
+
+				import_delegate.ImportObjects(tile_map, object_layers);
 
 				return tile_map;
 			}

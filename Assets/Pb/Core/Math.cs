@@ -1,3 +1,5 @@
+using Pb.Collections;
+
 namespace Pb
 {
 	/// <summary>
@@ -24,6 +26,26 @@ namespace Pb
 			return a / b;
 		}
 		/// <summary>
+		/// Performs a component-wise floor divide on two integer vectors
+		/// </summary>
+		/// <param name="a">The dividend</param>
+		/// <param name="b">The divisor</param>
+		/// <returns>The quotient rounded down to the nearest integer</returns>
+		public static IVector2 FloorDivide(IVector2 a, IVector2 b)
+		{
+			return new IVector2(FloorDivide(a.x, b.x), FloorDivide(a.y, b.y));
+		}
+		/// <summary>
+		/// Performs a component-wise floor divide on two integer vectors
+		/// </summary>
+		/// <param name="a">The dividend</param>
+		/// <param name="b">The divisor</param>
+		/// <returns>The quotient rounded down to the nearest integer</returns>
+		public static IVector3 FloorDivide(IVector3 a, IVector3 b)
+		{
+			return new IVector3(FloorDivide(a.x, b.x), FloorDivide(a.y, b.y), FloorDivide(a.z, b.z));
+		}
+		/// <summary>
 		/// Divides the first integer by the second and rounds up to the nearest integer without loss of precision
 		/// </summary>
 		/// <param name="a">The dividend</param>
@@ -40,6 +62,26 @@ namespace Pb
 			if (a < 0)
 				return a / b;
 			return (a + b - 1) / b;
+		}
+		/// <summary>
+		/// Performs a component-wise ceil divide on two integer vectors
+		/// </summary>
+		/// <param name="a">The dividend</param>
+		/// <param name="b">The divisor</param>
+		/// <returns>The quotient rounded up to the nearest integer</returns>
+		public static IVector2 CeilDivide(IVector2 a, IVector2 b)
+		{
+			return new IVector2(CeilDivide(a.x, b.x), CeilDivide(a.y, b.y));
+		}
+		/// <summary>
+		/// Performs a component-wise ceil divide on two integer vectors
+		/// </summary>
+		/// <param name="a">The dividend</param>
+		/// <param name="b">The divisor</param>
+		/// <returns>The quotient rounded up to the nearest integer</returns>
+		public static IVector3 CeilDivide(IVector3 a, IVector3 b)
+		{
+			return new IVector3(CeilDivide(a.x, b.x), CeilDivide(a.y, b.y), CeilDivide(a.z, b.z));
 		}
 		/// <summary>
 		/// Gets the RGB color associated with a hex color code (eg. F0563D)
@@ -137,6 +179,35 @@ namespace Pb
 			return Pair(ZToN(x), ZToN(y));
 		}
 		/// <summary>
+		/// Pairs three integers into a natural number
+		/// </summary>
+		/// <param name="x">The first integer to pair</param>
+		/// <param name="y">The second integer to pair</param>
+		/// <param name="z">The third integer to pair</param>
+		/// <returns>A natural number corresponding to the pair of the three integers</returns>
+		public static uint Pair(int x, int y, int z)
+		{
+			return Pair(ZToN(x), ZToN(y), ZToN(z));
+		}
+		/// <summary>
+		/// Pairs the X and Y components of an integer vector
+		/// </summary>
+		/// <param name="v">The integer vector</param>
+		/// <returns>The pair of the two components</returns>
+		public static uint Pair(IVector2 v)
+		{
+			return Pair(v.x, v.y);
+		}
+		/// <summary>
+		/// Pairs the X, Y, and Z components of an integer vector
+		/// </summary>
+		/// <param name="v">The integer vector</param>
+		/// <returns>The pair of the three components</returns>
+		public static uint Pair(IVector3 v)
+		{
+			return Pair(v.x, v.y, v.z);
+		}
+		/// <summary>
 		/// Pairs two natural numbers into a natural number
 		/// </summary>
 		/// <param name="x">The first natural number to pair</param>
@@ -147,31 +218,97 @@ namespace Pb
 			return (x + y) * (x + y + 1) / 2 + y;
 		}
 		/// <summary>
+		/// Pairs three natural numbers into a natural number
+		/// </summary>
+		/// <param name="x">The first natural number to pair</param>
+		/// <param name="y">The second natural number to pair</param>
+		/// <param name="y">The third natural number to pair</param>
+		/// <returns>A natural number corresponding to the pair of the three natural numbers</returns>
+		public static uint Pair(uint x, uint y, uint z)
+		{
+			return Pair(Pair(x, y), z);
+		}
+		/// <summary>
 		/// Determines the pair of integers that a natural number corresponds to
 		/// </summary>
-		/// <param name="z">The natural number</param>
+		/// <param name="n">The natural number</param>
 		/// <param name="x">The first integer of the pair</param>
 		/// <param name="y">The second integer of the pair</param>
-		public static void Unpair(uint z, out int x, out int y)
+		public static void Unpair(uint n, out int x, out int y)
 		{
 			uint ux;
 			uint uy;
-			Unpair(z, out ux, out uy);
+			Unpair(n, out ux, out uy);
 			x = NToZ(ux);
 			y = NToZ(uy);
 		}
 		/// <summary>
+		/// Determines the triplet of integers that a natural number corresponds to
+		/// </summary>
+		/// <param name="n">The natural number</param>
+		/// <param name="x">The first integer of the pair</param>
+		/// <param name="y">The second integer of the pair</param>
+		/// <param name="z">The third integer of the pair</param>
+		public static void Unpair(uint n, out int x, out int y, out int z)
+		{
+			uint ux;
+			uint uy;
+			uint uz;
+			Unpair(n, out ux, out uy, out uz);
+			x = NToZ(ux);
+			y = NToZ(uy);
+			z = NToZ(uz);
+		}
+		/// <summary>
+		/// Determines the IVector2 that a natural number corresponds to
+		/// </summary>
+		/// <param name="n">The natural number</param>
+		/// <returns>The IVector2 the natural number corresponds to</returns>
+		public static IVector2 Unpair2i(uint n)
+		{
+			int x;
+			int y;
+			Unpair(n, out x, out y);
+			return new IVector2(x, y);
+		}
+		/// <summary>
+		/// Determines the IVector3 that a natural number corresponds to
+		/// </summary>
+		/// <param name="n">The natural number</param>
+		/// <returns>The IVector3 the natural number corresponds to</returns>
+		public static IVector3 Unpair3i(uint n)
+		{
+			int x;
+			int y;
+			int z;
+			Unpair(n, out x, out y, out z);
+			return new IVector3(x, y, z);
+		}
+		/// <summary>
 		/// Determines the pair of natural numbers that a natural number corresponds to
 		/// </summary>
-		/// <param name="z">The natural number</param>
+		/// <param name="n">The natural number</param>
 		/// <param name="x">The first natural number of the pair</param>
 		/// <param name="y">The second natural number of the pair</param>
-		public static void Unpair(uint z, out uint x, out uint y)
+		public static void Unpair(uint n, out uint x, out uint y)
 		{
-			uint w = (uint)System.Math.Floor((System.Math.Sqrt(8.0 * z + 1.0) - 1.0) / 2.0);
+			uint w = (uint)System.Math.Floor((System.Math.Sqrt(8.0 * n + 1.0) - 1.0) / 2.0);
 			uint t = (w * w + w) / 2;
-			y = z - t;
+			y = n - t;
 			x = w - y;
+		}
+		/// <summary>
+		/// Determines the triplet of natural numbers that a natural number corresponds to
+		/// </summary>
+		/// <param name="n">The natural number</param>
+		/// <param name="x">The first natural number of the triplet</param>
+		/// <param name="y">The second natural number of the triplet</param>
+		/// <param name="z">The third natural number of the triplet</param>
+		public static void Unpair(uint n, out uint x, out uint y, out uint z)
+		{
+			uint temp;
+			Unpair(n, out temp, out z);
+			Unpair(temp, out x, out y);
 		}
 	}
 }

@@ -11,5 +11,12 @@ namespace Pbtk
 		public class PropertyMap :
 			Map<string, string>
 		{ }
+		/// <summary>
+		/// A map from a frame time to a frame index
+		/// </summary>
+		[System.Serializable]
+		public class FrameMap :
+			Map<int, int>
+		{ }
 	}
 }
